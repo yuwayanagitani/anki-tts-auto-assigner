@@ -1,51 +1,48 @@
-# TTS Assigner for Anki
+# Anki TTS Auto Assigner
 
-Automatically reads aloud selected fields on your Anki cards — without modifying your card templates. Perfect for language learning, accessibility, listening practice, and bilingual study decks.
+AnkiWeb: https://ankiweb.net/shared/by-author/2117859718
+
+Automatically reads aloud selected fields on your Anki cards — without modifying your card templates. Useful for language learning, accessibility, listening practice, and bilingual study decks.
 
 ## Features
-- Text-to-Speech (TTS) playback for selected fields.
-- Plays audio on card show, optionally with voice, language, and rate settings.
-- No changes required to card templates.
+- Read selected fields aloud during review
+- Works without changing templates by injecting a small playback UI
+- Supports local/system TTS and external providers (configurable)
 
 ## Requirements
-- Anki 2.1+
-- Internet connection for cloud TTS providers (if used) or use system/local TTS if supported.
+- For cloud/advanced voices: provider API key (if using external service)
+- For local TTS: platform TTS support (Windows SAPI, macOS NSSpeech, Linux speech-dispatcher)
 
 ## Installation
-1. Download or clone the add-on.
-2. In Anki: Tools → Add-ons → Open Add-ons Folder.
-3. Place the add-on folder in the add-ons directory and restart Anki.
+1. Tools → Add-ons → Open Add-ons Folder.
+2. Place the add-on folder into `addons21/`.
+3. Restart Anki.
+
+## Usage
+- Enable/disable TTS from the add-on menu.
+- Choose fields to read in the add-on settings.
+- During review the playback button will appear when configured fields are present.
 
 ## Configuration
-Available settings (via config UI or `config.json`):
-- Fields to read (e.g., Front, Back)
-- TTS provider (system/local, or cloud like OpenAI if supported)
-- Voice, language, speaking rate, volume
-- Play on show / play on demand toggle
+Edit `config.json`:
+- provider (system/gcloud/openai-tts/etc.)
+- voice, rate, volume
+- fields_to_read (array)
 
-Example config:
+Example:
 ```json
 {
-  "fields": ["Front", "Back"],
   "provider": "system",
   "voice": "default",
-  "on_show": true
+  "fields_to_read": ["Front", "Back"]
 }
 ```
 
-## Usage
-- The add-on will play configured fields automatically when a card is shown.
-- You can also trigger TTS manually via the add-on menu or keyboard shortcut (if provided).
+## Privacy & Costs
+Cloud TTS sends text to provider servers and may incur costs. Use system TTS to avoid external calls.
 
-## Troubleshooting
-- If audio does not play, check system sound and provider credentials.
-- Cloud TTS may require API keys; store them securely and follow the provider’s usage rules.
-
-## Development
-- PRs and issues welcome. Please include Anki version and steps to reproduce when reporting bugs.
+## Issues & Support
+Describe your OS, Anki version, and desired provider when reporting problems.
 
 ## License
-MIT License — see LICENSE file.
-
-## Contact
-Author: yuwayanagitani
+See LICENSE.

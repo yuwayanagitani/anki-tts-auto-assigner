@@ -1,121 +1,161 @@
-# TTS Auto Helper (Anki Add-on)
+# Anki TTS Auto Assigner
 
-🎧 Add **one-click text-to-speech buttons** to your cards — configured **per note type + per field**.
-
-This add-on uses your system/browser TTS via **Web Speech API** (`speechSynthesis`) inside Anki’s reviewer.  
-No external AI calls. No audio files are generated. Just instant playback.
+🔗 **AnkiWeb**  
+https://ankiweb.net/shared/info/474218374
 
 ---
 
-## What it does
+## What this add-on does
 
-✅ **Adds 🔊 buttons for selected fields** (e.g., Front / Back / Example / etc.)  
-✅ **Per-note-type × per-field settings**: enable/disable + language + voice  
-✅ **Auto-detects available voices** once per profile (cached)  
-✅ **Works on both question and answer sides** (smartly detects which fields are shown)  
-✅ **Auto-plays enabled fields sequentially** (plays one after another)
+**Anki TTS Auto Assigner** automatically assigns **Text-to-Speech (TTS) tags** to notes based on their fields,  
+so that Anki can generate spoken audio **without manually editing each card**.
+
+It is designed to make TTS usage **automatic, consistent, and scalable**, especially for large decks.
 
 ---
 
-## How it looks (behavior)
+## Core Features
 
-- On the review screen, you’ll see buttons like:
+- 🔊 Automatically adds TTS tags to notes
+- 📝 Works based on **field content** (e.g. Question / Answer)
+- 🌍 Language-aware assignment (per field)
+- 🔁 Supports batch processing
+- 🪶 Lightweight: no audio files are generated or stored
+- ⚙️ Uses Anki’s built-in TTS engine (no external services)
 
-🔊 Front 🔊 Back 🔊 Example
+---
 
-- Click a button → it speaks that field text.
-- If multiple fields are enabled on the current side, it can **auto-play them in order** (sequential playback).
+## How It Works
+
+1. You select notes (or run it on a target set)
+2. The add-on inspects configured fields
+3. Appropriate TTS tags are inserted automatically
+4. Anki handles playback using its native TTS system
+
+This means:
+- No MP3 files
+- No media folder bloat
+- Instant playback on supported platforms
+
+---
+
+## Why Use Auto TTS Assignment?
+
+Manually adding TTS tags is:
+
+- Time-consuming
+- Error-prone
+- Inconsistent across large decks
+
+This add-on ensures:
+
+- Uniform TTS formatting
+- Fast setup for thousands of notes
+- Easy maintenance when note types change
 
 ---
 
 ## Installation
 
-1. Download the add-on ZIP (or clone the repository).
-2. Put it into your Anki add-ons folder.
-3. Restart Anki.
+### From AnkiWeb (recommended)
+
+1. Open Anki  
+2. Tools → Add-ons → Get Add-ons  
+3. Enter the code from AnkiWeb  
+4. Restart Anki  
+
+👉 https://ankiweb.net/shared/info/474218374
 
 ---
 
-## Open settings
+### Manual (GitHub)
+
+1. Download or clone this repository
+2. Place it in:
+
+   `Anki2/<profile>/addons21/anki-tts-auto-assigner/`
+
+3. Restart Anki
+
+---
+
+## Configuration
 
 Open:
 
-- **Tools → Add-ons → TTS Auto Helper → Config**
+**Tools → Add-ons → Anki TTS Auto Assigner → Config**
 
-This opens a dedicated GUI (not the raw JSON editor).
+You can configure:
 
----
+- Enable / disable the add-on
+- Target note type(s)
+- Field → language mapping
+- TTS voice options (per language, if supported)
+- Whether to overwrite existing TTS tags
 
-## Settings overview
-
-### Global
-- **Enable TTS Auto Helper**  
-  Turns the whole add-on on/off.
-
-### Per note type + field
-Pick a note type from the dropdown, then for each field:
-
-- **Enabled**: show a 🔊 button for this field
-- **Language**: e.g., `en-US`, `ja-JP`, etc.
-- **Voice**: optional (choose from your available voices)
-
-> Tip: Leave Voice empty (`""`) to use the default voice for that language.
-
-### Reset
-- **Reset to defaults**: restores the shipped default settings and rebuilds missing field settings.
+All settings are applied **without modifying card templates manually**.
 
 ---
 
-## Voice auto-detection (important)
+## Usage
 
-On profile load, the add-on runs a **one-time voice probe** using a hidden webview:
-- It reads `speechSynthesis.getVoices()`
-- Stores the result into config as `languages_auto` and `voices_auto`
-- Next time, the settings dialog uses those auto-detected lists
+### Automatic assignment
 
-If your voice list changes (OS updates, new voices installed), you can trigger re-detection by:
-- Removing `voices_auto` / `languages_auto` in config (or resetting to defaults), then restarting Anki
+- Run the add-on on selected notes
+- TTS tags are added immediately
+- Changes are visible in the note fields
 
----
+### Batch use case
 
-## Notes / limitations
-
-- **TTS requires Web Speech API support** in your Anki environment.
-- Some systems return voices asynchronously; the add-on handles that (via `onvoiceschanged`).
-- Field text is spoken as-is. If your fields contain heavy HTML, the browser may read raw text oddly.
+Ideal when:
+- Importing large decks
+- Cleaning up inconsistent TTS tags
+- Adding pronunciation support after deck creation
 
 ---
 
-## Troubleshooting
+## Notes & Limitations
 
-### 🔇 No voices or no sound
-- Confirm your OS audio works.
-- Try restarting Anki once (voice lists sometimes load only after a fresh start).
-- Check if Web Speech API is available in your environment.
-
-### 🧩 Buttons don’t appear
-- Make sure the add-on is enabled.
-- In settings, confirm the field is enabled for the correct note type.
-- If the template doesn’t reference any fields, the add-on falls back to showing buttons for all fields.
-
-### 🎙 Wrong language/voice
-- Set the field’s **Language** explicitly (e.g., `ja-JP`).
-- Choose a specific voice (optional).
+- This add-on **does not generate audio files**
+- Actual playback depends on:
+  - Platform (Windows / macOS / Linux)
+  - Available system voices
+- Some voices or languages may not be available on all systems
 
 ---
 
-## Privacy
+## Performance
 
-- This add-on does **not** send your card text anywhere.
-- No API keys are needed.
-- TTS runs locally via your system’s available voices (through the reviewer webview).
+- Operates only on selected notes
+- No background tasks
+- Safe to run on large collections
 
 ---
 
-## Technical notes (for developers)
+## Compatibility
 
-- Buttons are injected via `gui_hooks.card_will_show`.
-- Voice probing uses a hidden `AnkiWebView` and `pycmd()` bridge.
-- Per-field settings live under `fieldSettings[model_id][field_name]`.
+- Anki 24.x
+- Anki 25.x
+- Windows / macOS / Linux
 
-Enjoy faster pronunciation practice ✨
+---
+
+## License
+
+MIT License
+
+---
+
+## Author
+
+Created by **@yuwayanagitani**
+
+---
+
+## Related Add-ons
+
+- **AI Card Translator** – Translate cards during review
+- **AI Card Explainer** – Generate explanations automatically
+- **HTML Exporter for Anki** – Export cards to HTML / PDF
+
+These tools can be combined for a richer, more accessible study workflow.
